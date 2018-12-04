@@ -6,8 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -15,11 +13,11 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnCheckedChanged;
+
 
 public class ListAdapter extends BaseAdapter {
 
-    List<Task> tasks = new ArrayList<>();
+    private List<Task> tasks = new ArrayList<>();
 
     ListAdapter() {
         tasks.add(new Task("Buy beer",1));
@@ -30,7 +28,7 @@ public class ListAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
-    public void deleteItem(int position){
+    private void removeItem(int position){
         tasks.remove(position);
         notifyDataSetChanged();
     }
@@ -68,7 +66,7 @@ public class ListAdapter extends BaseAdapter {
         checkBox.setChecked(false);
         checkBox.setOnCheckedChangeListener( (compoundButton, isChecked) -> {
             if(isChecked) {
-                deleteItem(position);
+                removeItem(position);
             }
         });
 
@@ -80,19 +78,19 @@ public class ListAdapter extends BaseAdapter {
     private int getPriorityColor(int priority){
         int color = R.color.white;
         switch(priority){
-            case 1:
+            case Task.TASK_PRIORITY_HIGHEST:
                 color = R.color.blue;
                 break;
-            case 2:
+            case Task.TASK_PRIORITY_HIGH:
                 color = R.color.red;
                 break;
-            case 3:
+            case Task.TASK_PRIORITY_MEDIUM:
                 color = R.color.green;
                 break;
-            case 4:
+            case Task.TASK_PRIORITY_LOW:
                 color = R.color.yellow;
                 break;
-            case 5:
+            case Task.TASK_PRIORITY_LOWEST:
                 color = R.color.cyan;
                 break;
         }
