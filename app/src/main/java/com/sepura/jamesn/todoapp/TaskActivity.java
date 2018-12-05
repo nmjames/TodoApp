@@ -7,10 +7,8 @@ import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.inputmethod.EditorInfo;
-import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -43,7 +41,7 @@ public class TaskActivity extends AppCompatActivity {
 
         textView.setOnEditorActionListener((v,actionId,event) -> {
             if(actionId== EditorInfo.IME_ACTION_DONE){
-                endAction(RESULT_OK);
+                endAction();
                 return true;
             }
             return false;
@@ -54,56 +52,49 @@ public class TaskActivity extends AppCompatActivity {
 
     @OnClick(R.id.okButton)
     void onOkClicked() {
-        endAction(RESULT_OK);
+        endAction();
     }
 
     @OnClick(R.id.cancelButton)
     void onCancelClicked(){
-        endAction(RESULT_CANCELED);
+        sendIntentCancel();
     }
 
-    private void endAction(int result){
-        Intent intent = new Intent();
+    private void endAction(){
 
-        if(result == RESULT_OK) {
+        String taskStr = textView.getText().toString();
+        String taskPriorityStr = textPriority.getText().toString();
 
-            String tmp = textPriority.getText().toString();
-            int priority = 0;
-            if (!tmp.isEmpty()){
-                priority = Integer.parseInt(tmp);
-            }
-
-            Task task = new Task(textView.getText().toString(), priority);
-
-            if (isTaskValid(task)){
-                intent.putExtra(TASK_REF, task);
-                intent.putExtra(POSITION_REF, position);
-                setResult(result, intent);
-                finish();
-            }
-        } else {
-            setResult(result, intent);
-            finish();
+        if(isDescriptionValid(taskStr) && (isPriorityValid(taskPriorityStr))) {
+            Task task = new Task(taskStr, Integer.parseInt(taskPriorityStr));
+            sendIntentOk(task);
         }
     }
 
-
-
-    private boolean isTaskValid(Task task){
-        String string = task.getName();
-        int priority = task.getPriority();
-
-        AtomicBoolean result = new AtomicBoolean(true);
-
-        if(string.isEmpty()){
+    private boolean isDescriptionValid(String description){
+        boolean result = true;
+        if(description.isEmpty()) {
             showInvalidDescriptionWarning();
-            result.set(false);
-        } else  if( (priority < Task.TASK_PRIORITY_LOWEST) || (priority > Task.TASK_PRIORITY_HIGHEST) ) {
-            showInvalidPriorityWarning();
-            result.set(false);
+            result = false;
+        }
+        return result;
+    }
+
+    private boolean isPriorityValid(String priorityStr) {
+        boolean result = true;
+        if (priorityStr.isEmpty()) {
+            result = false;
+        } else {
+            int priority = Integer.parseInt(priorityStr);
+            if ((priority < Task.TASK_PRIORITY_LOWEST) || (priority > Task.TASK_PRIORITY_HIGHEST)) {
+                result = false;
+            }
         }
 
-        return result.get();
+        if (!result) {
+            showInvalidPriorityWarning();
+        }
+        return result;
     }
 
     private void showInvalidDescriptionWarning(){
@@ -121,8 +112,30 @@ public class TaskActivity extends AppCompatActivity {
                 .setTitle(getString(R.string.dialog_warning_title))
                 .setMessage(getString(R.string.priority_missing_message))
                 .setCancelable(false)
-                .setPositiveButton(R.string.button_positive,(dialogInterface, i) -> {})
+                .setPositiveButton(R.string.button_positive,(dialogInterface, i) -> {
+                    endUsingDefaultPriority();
+                })
+                .setNegativeButton(R.string.button_negative,(dialogInterface, i) -> {})
                 .create();
         dialog.show();
     }
+
+    private void endUsingDefaultPriority() {
+        Task task = new Task(textView.getText().toString(), Task.TASK_PRIORITY_NORMAL);
+        sendIntentOk(task);
+    }
+
+    private void sendIntentCancel(){
+        setResult(RESULT_CANCELED, new Intent() );
+        finish();
+    }
+
+    private void sendIntentOk(Task task) {
+        Intent intent = new Intent();
+        intent.putExtra(TASK_REF, task);
+        intent.putExtra(POSITION_REF, getIntent().getIntExtra(POSITION_REF, -1));
+        setResult(RESULT_OK, intent);
+        finish();
+    }
+
 }

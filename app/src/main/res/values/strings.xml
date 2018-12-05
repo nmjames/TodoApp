@@ -4,7 +4,7 @@
     <string name="button_negative">CANCEL</string>
     <string name="button_positive">OK</string>
     <string name="description_missing_message">Description missing</string>
-    <string name="priority_missing_message">Priority missing</string>
+    <string name="priority_missing_message">Priority invalid, press OK to use default</string>
     <string name="dialog_warning_title">Warning</string>
     <string name="option_settings">Options setting</string>
     <string name="take_photo_button">Take Photo</string>
