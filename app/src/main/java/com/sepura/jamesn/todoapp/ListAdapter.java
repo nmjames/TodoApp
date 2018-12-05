@@ -1,10 +1,12 @@
 
 package com.sepura.jamesn.todoapp;
 
+import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
@@ -15,12 +17,40 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class ListAdapter extends BaseAdapter {
+public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
 
     private List<Task> tasks = new ArrayList<>();
 
     ListAdapter() {
         tasks.add(new Task( "Buy beer",Task.TASK_PRIORITY_NORMAL));
+    }
+
+    @NonNull
+    @Override
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+        LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
+        View view = inflater.inflate(R.layout.task_item, viewGroup, false);
+
+        return new ViewHolder(view);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
+        Context context = viewHolder.itemView.getContext();
+
+        Task task = tasks.get(position);
+        int priority = task.getPriority();
+
+        viewHolder.taskNameText.setText(task.getName());
+        viewHolder.taskPriority.setText(Integer.toString(priority));
+        viewHolder.checkBox.setChecked(false);
+        viewHolder.checkBox.setOnCheckedChangeListener( (compoundButton, isChecked) -> {
+            if(isChecked) {
+                deleteItem(position);
+            }
+        });
+
+        viewHolder.itemView.setBackgroundResource(getPriorityColor(priority));
     }
 
     public void addItem(Task task){
@@ -29,7 +59,7 @@ public class ListAdapter extends BaseAdapter {
     }
 
     public void setItem(int position, Task task){
-        if(position < getCount()){
+        if(position < tasks.size()){
             tasks.set(position, task);
             notifyDataSetChanged();
         }
@@ -40,12 +70,7 @@ public class ListAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
-    @Override
-    public int getCount() {
-        return tasks.size();
-    }
 
-    @Override
     public Object getItem(int position) {
         return tasks.get(position);
     }
@@ -55,32 +80,11 @@ public class ListAdapter extends BaseAdapter {
         return position;
     }
 
-    @BindView(R.id.taskNameText) TextView taskNameText;
-    @BindView(R.id.taskPriority) TextView taskPriority;
-    @BindView(R.id.checkBox)  CheckBox checkBox;
-
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        if (convertView == null) {
-            convertView = inflater.inflate(R.layout.task_item, parent, false);
-        }
-        ButterKnife.bind(this, convertView);
-        Task task = tasks.get(position);
-        int priority = task.getPriority();
-        taskNameText.setText(task.getName());
-        taskPriority.setText(Integer.toString(priority));
-        checkBox.setChecked(false);
-        checkBox.setOnCheckedChangeListener( (compoundButton, isChecked) -> {
-            if(isChecked) {
-                deleteItem(position);
-            }
-        });
-
-        convertView.setBackgroundResource(getPriorityColor(priority));
-
-        return convertView;
+    public int getItemCount() {
+        return tasks.size();
     }
+
 
     private int getPriorityColor(int priority){
         int color = R.color.white;
@@ -102,6 +106,18 @@ public class ListAdapter extends BaseAdapter {
                 break;
         }
         return color;
+    }
+
+    static class ViewHolder extends RecyclerView.ViewHolder {
+
+        @BindView(R.id.taskNameText) TextView taskNameText;
+        @BindView(R.id.taskPriority) TextView taskPriority;
+        @BindView(R.id.checkBox)  CheckBox checkBox;
+
+        public ViewHolder(@NonNull View itemView) {
+            super(itemView);
+            ButterKnife.bind(this,itemView);
+        }
     }
 
 }

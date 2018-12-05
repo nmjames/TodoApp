@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
@@ -19,7 +21,8 @@ public class ListActivity extends AppCompatActivity {
     static final int ADD_TASK_CODE = 1;
     static final int EDIT_TASK_CODE = 2;
     @BindView(R.id.listView)
-    ListView listView;
+    RecyclerView listView;
+//    RecyclerView recyclerView;
     ListAdapter listAdapter;
 
     @Override
@@ -28,21 +31,23 @@ public class ListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_list);
         ButterKnife.bind(this);
         listAdapter = new ListAdapter();
+
         listView.setAdapter(listAdapter);
+        listView.setLayoutManager(new LinearLayoutManager(this));
 
-        listView.setOnItemClickListener((parent, view, position,id) -> {
+    //    listView.setOnItemClickListener((parent, view, position,id) -> {
 
-            Task task = (Task)listAdapter.getItem(position);
+      //      Task task = (Task)listAdapter.getItem(position);
 
-            Intent intent = new Intent(this, TaskActivity.class);
+        //    Intent intent = new Intent(this, TaskActivity.class);
 
-            intent.putExtra(TaskActivity.POSITION_REF, position);
-            intent.putExtra(TaskActivity.TASK_REF, task);
-            startActivityForResult(intent, EDIT_TASK_CODE);
+          //  intent.putExtra(TaskActivity.POSITION_REF, position);
+            //intent.putExtra(TaskActivity.TASK_REF, task);
+            //startActivityForResult(intent, EDIT_TASK_CODE);
 
 
-            Toast.makeText(this, "clicked item" + position + "id" +id, Toast.LENGTH_LONG).show();
-        });
+            //Toast.makeText(this, "clicked item" + position + "id" +id, Toast.LENGTH_LONG).show();
+        //});
     }
 
     @Override
