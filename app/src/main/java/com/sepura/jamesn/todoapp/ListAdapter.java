@@ -28,7 +28,7 @@ public class ListAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
-    private void removeItem(int position){
+    private void deleteItem(int position){
         tasks.remove(position);
         notifyDataSetChanged();
     }
@@ -66,7 +66,7 @@ public class ListAdapter extends BaseAdapter {
         checkBox.setChecked(false);
         checkBox.setOnCheckedChangeListener( (compoundButton, isChecked) -> {
             if(isChecked) {
-                removeItem(position);
+                deleteItem(position);
             }
         });
 
