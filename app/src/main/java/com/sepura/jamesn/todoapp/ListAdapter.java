@@ -84,7 +84,7 @@ public class ListAdapter extends BaseAdapter {
             case Task.TASK_PRIORITY_HIGH:
                 color = R.color.red;
                 break;
-            case Task.TASK_PRIORITY_MEDIUM:
+            case Task.TASK_PRIORITY_NORMAL:
                 color = R.color.green;
                 break;
             case Task.TASK_PRIORITY_LOW:

@@ -4,22 +4,20 @@ import android.content.Intent;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.Editable;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
 
 public class TaskActivity extends AppCompatActivity {
     public static final String TASK_REF = "ADD_TASK_KEY";
     public static final String TASK_NAME = "ADD_TASK_KEY";
     public static final String TASK_PRIORITY = "ADD_TASK_PRIORITY_KEY";
+
+    private int taskPriority = Task.TASK_PRIORITY_NORMAL;
 
     @BindView(R.id.editText) TextInputEditText textView;
     @BindView(R.id.editPriority) TextView textPriority;
@@ -38,7 +36,7 @@ public class TaskActivity extends AppCompatActivity {
 
         // Apply the adapter to the spinner
         spinnerPriority.setAdapter(adapter);
-        //spinnerPriority.setOnItemSelectedListener();
+        //spinnerPriority.setOnItemSelectedListener(this);
         spinnerPriority.setSelection(2);
     }
 
