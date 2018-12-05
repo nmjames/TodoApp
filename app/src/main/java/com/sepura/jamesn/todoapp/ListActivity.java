@@ -62,13 +62,11 @@ public class ListActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if( resultCode == RESULT_OK){
-            String string = data.getStringExtra( TaskActivity.TASK_NAME );
-            int priority = data.getIntExtra(TaskActivity.TASK_PRIORITY, 0);
-            Task task = new Task(string, priority);
+            Task task = (Task)data.getSerializableExtra(TaskActivity.TASK_REF);
             ListAdapter  adapter = (ListAdapter) listView.getAdapter();
             adapter.addItem(task);
 
-            Toast.makeText(this, string, Toast.LENGTH_LONG).show();
+
         } else if (resultCode == RESULT_CANCELED){
             Toast.makeText(this, "Cancelled", Toast.LENGTH_LONG).show();
         }

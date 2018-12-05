@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -14,7 +16,7 @@ import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
 
 public class TaskActivity extends AppCompatActivity {
-
+    public static final String TASK_REF = "ADD_TASK_KEY";
     public static final String TASK_NAME = "ADD_TASK_KEY";
     public static final String TASK_PRIORITY = "ADD_TASK_PRIORITY_KEY";
 
@@ -33,22 +35,20 @@ public class TaskActivity extends AppCompatActivity {
         // Specify the layout to use when the list of choices appears
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-
         // Apply the adapter to the spinner
         spinnerPriority.setAdapter(adapter);
+        //spinnerPriority.setOnItemSelectedListener();
         spinnerPriority.setSelection(2);
-
     }
 
 
     @OnClick(R.id.okButton)
     void onOkClicked() {
         Intent intent = new Intent();
-        String string = textView.getText().toString();
-        int priority = Integer.parseInt(textPriority.getText().toString());
+        Task task = new Task( textView.getText().toString(),
+                             (Integer.parseInt(textPriority.getText().toString())));
 
-        intent.putExtra(TASK_NAME, string);
-        intent.putExtra(TASK_PRIORITY,priority);
+        intent.putExtra(TASK_REF, task);
         setResult(RESULT_OK, intent);
         finish();
     }
