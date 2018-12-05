@@ -1,6 +1,7 @@
 package com.sepura.jamesn.todoapp;
 
 import android.content.Intent;
+import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -20,7 +21,7 @@ public class TaskActivity extends AppCompatActivity {
     public static final String TASK_NAME = "ADD_TASK_KEY";
     public static final String TASK_PRIORITY = "ADD_TASK_PRIORITY_KEY";
 
-    @BindView(R.id.editText) TextView textView;
+    @BindView(R.id.editText) TextInputEditText textView;
     @BindView(R.id.editPriority) TextView textPriority;
     @BindView(R.id.spinnerPriority) Spinner spinnerPriority;
 
