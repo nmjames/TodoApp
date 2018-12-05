@@ -1,8 +1,9 @@
 package com.sepura.jamesn.todoapp;
 
-import java.io.Serializable;
+import android.os.Parcel;
+import android.os.Parcelable;
 
-public class Task implements Serializable {
+public class Task implements Parcelable {
     private String name;
     private int priority;
 
@@ -12,6 +13,34 @@ public class Task implements Serializable {
     public static final int TASK_PRIORITY_LOW        = 4;
     public static final int TASK_PRIORITY_LOWEST     = 5;
 
+
+    protected Task(Parcel in) {
+        name = in.readString();
+        priority = in.readInt();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(name);
+        dest.writeInt(priority);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<Task> CREATOR = new Creator<Task>() {
+        @Override
+        public Task createFromParcel(Parcel in) {
+            return new Task(in);
+        }
+
+        @Override
+        public Task[] newArray(int size) {
+            return new Task[size];
+        }
+    };
 
     public String getName() {
         return name;

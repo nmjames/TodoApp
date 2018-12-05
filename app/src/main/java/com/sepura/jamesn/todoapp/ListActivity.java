@@ -62,7 +62,7 @@ public class ListActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if( resultCode == RESULT_OK){
-            Task task = (Task)data.getSerializableExtra(TaskActivity.TASK_REF);
+            Task task = data.getParcelableExtra(TaskActivity.TASK_REF);
             ListAdapter  adapter = (ListAdapter) listView.getAdapter();
             adapter.addItem(task);
 
