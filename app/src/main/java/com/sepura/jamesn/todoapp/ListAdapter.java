@@ -28,6 +28,13 @@ public class ListAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
+    public void setItem(int position, Task task){
+        if(position < getCount()){
+            tasks.set(position, task);
+            notifyDataSetChanged();
+        }
+    }
+
     private void deleteItem(int position){
         tasks.remove(position);
         notifyDataSetChanged();

@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -19,9 +18,9 @@ import butterknife.OnClick;
 
 public class TaskActivity extends AppCompatActivity {
     public static final String TASK_REF = "ADD_TASK_KEY";
+    public static final String POSITION_REF = "POSITION_KEY";
 
-
-    private int taskPriority = Task.TASK_PRIORITY_NORMAL;
+    private int position = -1;
 
     @BindView(R.id.editText) TextInputEditText textView;
     @BindView(R.id.editPriority) TextInputEditText textPriority;
@@ -33,15 +32,14 @@ public class TaskActivity extends AppCompatActivity {
         setContentView(R.layout.activity_task);
         ButterKnife.bind(this);
 
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.task_priority_array, android.R.layout.simple_spinner_item);
-        // Specify the layout to use when the list of choices appears
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        Task task = getIntent().getParcelableExtra(TASK_REF);
+        if(task != null){
+            textView.setText(task.getName());
+            textPriority.setText((""+ task.getPriority()));
+            position = getIntent().getIntExtra(POSITION_REF,-1);
+        }
 
-        // Apply the adapter to the spinner
-        spinnerPriority.setAdapter(adapter);
-        //spinnerPriority.setOnItemSelectedListener(this);
-        spinnerPriority.setSelection(2);
+
 
         textView.setOnEditorActionListener((v,actionId,event) -> {
             if(actionId== EditorInfo.IME_ACTION_DONE){
@@ -79,6 +77,7 @@ public class TaskActivity extends AppCompatActivity {
 
             if (isTaskValid(task)){
                 intent.putExtra(TASK_REF, task);
+                intent.putExtra(POSITION_REF, position);
                 setResult(result, intent);
                 finish();
             }

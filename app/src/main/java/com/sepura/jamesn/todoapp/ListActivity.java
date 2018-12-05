@@ -17,15 +17,32 @@ import butterknife.OnClick;
 public class ListActivity extends AppCompatActivity {
 
     static final int ADD_TASK_CODE = 1;
+    static final int EDIT_TASK_CODE = 2;
     @BindView(R.id.listView)
     ListView listView;
+    ListAdapter listAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
         ButterKnife.bind(this);
-        listView.setAdapter(new ListAdapter());
+        listAdapter = new ListAdapter();
+        listView.setAdapter(listAdapter);
+
+        listView.setOnItemClickListener((parent, view, position,id) -> {
+
+            Task task = (Task)listAdapter.getItem(position);
+
+            Intent intent = new Intent(this, TaskActivity.class);
+
+            intent.putExtra(TaskActivity.POSITION_REF, position);
+            intent.putExtra(TaskActivity.TASK_REF, task);
+            startActivityForResult(intent, EDIT_TASK_CODE);
+
+
+            Toast.makeText(this, "clicked item" + position + "id" +id, Toast.LENGTH_LONG).show();
+        });
     }
 
     @Override
@@ -62,8 +79,14 @@ public class ListActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if( resultCode == RESULT_OK){
             Task task = data.getParcelableExtra(TaskActivity.TASK_REF);
-            ListAdapter  adapter = (ListAdapter) listView.getAdapter();
-            adapter.addItem(task);
+            int position = data.getIntExtra(TaskActivity.POSITION_REF, -1);
+
+            if(position == -1){
+                listAdapter.addItem(task);
+            } else {
+                listAdapter.setItem(position, task);
+            }
+
 
 
         } else if (resultCode == RESULT_CANCELED){
