@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -38,25 +39,38 @@ public class TaskActivity extends AppCompatActivity {
         spinnerPriority.setAdapter(adapter);
         //spinnerPriority.setOnItemSelectedListener(this);
         spinnerPriority.setSelection(2);
+
+        textView.setOnEditorActionListener((v,actionId,event) -> {
+            if(actionId== EditorInfo.IME_ACTION_DONE){
+                endAction(RESULT_OK);
+                return true;
+            }
+            return false;
+        });
     }
+
 
 
     @OnClick(R.id.okButton)
     void onOkClicked() {
-        Intent intent = new Intent();
-        Task task = new Task( textView.getText().toString(),
-                             (Integer.parseInt(textPriority.getText().toString())));
-
-        intent.putExtra(TASK_REF, task);
-        setResult(RESULT_OK, intent);
-        finish();
+        endAction(RESULT_OK);
     }
 
     @OnClick(R.id.cancelButton)
     void onCancelClicked(){
-        Intent intent = new Intent();
-        setResult(RESULT_CANCELED, intent);
-        finish();
+        endAction(RESULT_CANCELED);
     }
 
+    private void endAction(int result){
+        Intent intent = new Intent();
+
+        if(result == RESULT_OK) {
+            Task task = new Task(textView.getText().toString(),
+                    (Integer.parseInt(textPriority.getText().toString())));
+
+            intent.putExtra(TASK_REF, task);
+        }
+        setResult(result, intent);
+        finish();
+    }
 }
