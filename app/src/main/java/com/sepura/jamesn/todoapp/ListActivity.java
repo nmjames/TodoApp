@@ -12,7 +12,6 @@ import android.widget.Toast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
 
 public class ListActivity extends AppCompatActivity {
@@ -45,7 +44,7 @@ public class ListActivity extends AppCompatActivity {
                 return true;
 
             case R.id.settings:
-                Toast.makeText(this, "Settings option", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, getString(R.string.option_settings), Toast.LENGTH_LONG).show();
                 return true;
 
             default:
@@ -68,7 +67,7 @@ public class ListActivity extends AppCompatActivity {
 
 
         } else if (resultCode == RESULT_CANCELED){
-            Toast.makeText(this, "Cancelled", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.button_negative, Toast.LENGTH_LONG).show();
         }
     }
 

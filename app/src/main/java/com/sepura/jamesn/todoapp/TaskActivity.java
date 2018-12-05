@@ -1,5 +1,7 @@
 package com.sepura.jamesn.todoapp;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Intent;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
@@ -9,19 +11,20 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class TaskActivity extends AppCompatActivity {
     public static final String TASK_REF = "ADD_TASK_KEY";
-    public static final String TASK_NAME = "ADD_TASK_KEY";
-    public static final String TASK_PRIORITY = "ADD_TASK_PRIORITY_KEY";
+
 
     private int taskPriority = Task.TASK_PRIORITY_NORMAL;
 
     @BindView(R.id.editText) TextInputEditText textView;
-    @BindView(R.id.editPriority) TextView textPriority;
+    @BindView(R.id.editPriority) TextInputEditText textPriority;
     @BindView(R.id.spinnerPriority) Spinner spinnerPriority;
 
     @Override
@@ -65,12 +68,62 @@ public class TaskActivity extends AppCompatActivity {
         Intent intent = new Intent();
 
         if(result == RESULT_OK) {
-            Task task = new Task(textView.getText().toString(),
-                    (Integer.parseInt(textPriority.getText().toString())));
 
-            intent.putExtra(TASK_REF, task);
+            String tmp = textPriority.getText().toString();
+            int priority = 0;
+            if (!tmp.isEmpty()){
+                priority = Integer.parseInt(tmp);
+            }
+
+            Task task = new Task(textView.getText().toString(), priority);
+
+            if (isTaskValid(task)){
+                intent.putExtra(TASK_REF, task);
+                setResult(result, intent);
+                finish();
+            }
+        } else {
+            setResult(result, intent);
+            finish();
         }
-        setResult(result, intent);
-        finish();
+    }
+
+
+
+    private boolean isTaskValid(Task task){
+        String string = task.getName();
+        int priority = task.getPriority();
+
+        AtomicBoolean result = new AtomicBoolean(true);
+
+        if(string.isEmpty()){
+            showInvalidDescriptionWarning();
+            result.set(false);
+        } else  if( (priority < Task.TASK_PRIORITY_LOWEST) || (priority > Task.TASK_PRIORITY_HIGHEST) ) {
+            showInvalidPriorityWarning();
+            result.set(false);
+        }
+
+        return result.get();
+    }
+
+    private void showInvalidDescriptionWarning(){
+        Dialog dialog = new AlertDialog.Builder(this)
+                .setTitle(getString(R.string.dialog_warning_title))
+                .setMessage(getString(R.string.description_missing_message))
+                .setCancelable(false)
+                .setPositiveButton(R.string.button_positive,(dialogInterface, i) -> {})
+                .create();
+        dialog.show();
+    }
+
+    private void showInvalidPriorityWarning(){
+        Dialog dialog = new AlertDialog.Builder(this)
+                .setTitle(getString(R.string.dialog_warning_title))
+                .setMessage(getString(R.string.priority_missing_message))
+                .setCancelable(false)
+                .setPositiveButton(R.string.button_positive,(dialogInterface, i) -> {})
+                .create();
+        dialog.show();
     }
 }

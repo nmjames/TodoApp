@@ -7,11 +7,11 @@ public class Task implements Parcelable {
     private String name;
     private int priority;
 
-    public static final int TASK_PRIORITY_HIGHEST    = 1;
-    public static final int TASK_PRIORITY_HIGH       = 2;
+    public static final int TASK_PRIORITY_HIGHEST    = 5;
+    public static final int TASK_PRIORITY_HIGH       = 4;
     public static final int TASK_PRIORITY_NORMAL = 3;
-    public static final int TASK_PRIORITY_LOW        = 4;
-    public static final int TASK_PRIORITY_LOWEST     = 5;
+    public static final int TASK_PRIORITY_LOW        = 2;
+    public static final int TASK_PRIORITY_LOWEST     = 1;
 
 
     protected Task(Parcel in) {

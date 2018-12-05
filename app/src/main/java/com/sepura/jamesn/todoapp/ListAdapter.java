@@ -20,7 +20,7 @@ public class ListAdapter extends BaseAdapter {
     private List<Task> tasks = new ArrayList<>();
 
     ListAdapter() {
-        tasks.add(new Task("Buy beer",1));
+        tasks.add(new Task( "Buy beer",Task.TASK_PRIORITY_NORMAL));
     }
 
     public void addItem(Task task){
