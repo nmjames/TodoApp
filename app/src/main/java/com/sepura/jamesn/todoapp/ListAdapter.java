@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,17 +20,20 @@ import butterknife.ButterKnife;
 
 public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
 
-    private List<Task> tasks = new ArrayList<>();
+    private List<Task> tasks;
     private TaskItemClickListener taskItemClickListener;
+    private TaskRepository taskRepository;
 
-    public ListAdapter(TaskItemClickListener taskItemClickListener){
+    public ListAdapter(Context context, TaskItemClickListener taskItemClickListener){
 
         this.taskItemClickListener = taskItemClickListener;
 
-        tasks.add(new Task( "Buy beer",Task.TASK_PRIORITY_HIGH));
-        tasks.add(new Task( "Buy snacks",Task.TASK_PRIORITY_NORMAL));
-        tasks.add(new Task( "Start Netflix",Task.TASK_PRIORITY_LOW));
+        taskRepository = new TaskRepository(context);
+        tasks = taskRepository.readTasks();
 
+        if(tasks == null){
+            tasks = new ArrayList<>();
+        }
 
     }
 
@@ -69,20 +73,26 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
 
     public void addItem(Task task){
         tasks.add(task);
-        notifyDataSetChanged();
+        dataSetChanged();
     }
 
     public void setItem(int position, Task task){
         if(position < tasks.size()){
             tasks.set(position, task);
-            notifyDataSetChanged();
+            dataSetChanged();
         }
     }
 
     private void deleteItem(int position){
         tasks.remove(position);
+        dataSetChanged();
+    }
+
+    private void dataSetChanged(){
+        taskRepository.saveTasks(tasks);
         notifyDataSetChanged();
     }
+
 
 
     public Object getItem(int position) {

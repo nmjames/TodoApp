@@ -44,7 +44,7 @@ public class ListActivity extends AppCompatActivity {
             startActivityForResult(intent, EDIT_TASK_CODE);
         };
 
-        listAdapter = new ListAdapter(taskItemClickListener);
+        listAdapter = new ListAdapter(this, taskItemClickListener);
 
         listView.setAdapter(listAdapter);
         listView.setLayoutManager(new LinearLayoutManager(this));
