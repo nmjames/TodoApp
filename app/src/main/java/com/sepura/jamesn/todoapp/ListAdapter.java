@@ -30,6 +30,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
         tasks.add(new Task( "Buy snacks",Task.TASK_PRIORITY_NORMAL));
         tasks.add(new Task( "Start Netflix",Task.TASK_PRIORITY_LOW));
 
+
     }
 
 

@@ -20,6 +20,13 @@ public class TaskActivity extends AppCompatActivity {
 
     private int position = -1;
 
+    static {
+        System.loadLibrary("native-getPriority");
+    }
+
+    public native int getPriority();
+
+
     @BindView(R.id.editText) TextInputEditText textView;
     @BindView(R.id.editPriority) TextInputEditText textPriority;
     @BindView(R.id.spinnerPriority) Spinner spinnerPriority;
@@ -121,7 +128,8 @@ public class TaskActivity extends AppCompatActivity {
     }
 
     private void endUsingDefaultPriority() {
-        Task task = new Task(textView.getText().toString(), Task.TASK_PRIORITY_NORMAL);
+        int pri = getPriority();
+        Task task = new Task(textView.getText().toString(), pri);
         sendIntentOk(task);
     }
 

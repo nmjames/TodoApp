@@ -61,7 +61,7 @@ public class ListActivity extends AppCompatActivity {
                 return true;
 
             case R.id.settings:
-                Toast.makeText(this, getString(R.string.option_settings), Toast.LENGTH_LONG).show();
+                Toast.makeText(this,  "Settings options", Toast.LENGTH_LONG).show();
                 return true;
 
             default:
