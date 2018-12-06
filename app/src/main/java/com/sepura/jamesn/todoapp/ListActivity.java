@@ -1,6 +1,8 @@
 package com.sepura.jamesn.todoapp;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -24,11 +26,15 @@ public class ListActivity extends AppCompatActivity {
     RecyclerView listView;
 //    RecyclerView recyclerView;
     ListAdapter listAdapter;
-
+    SharedPreferences sharedPref;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
+
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+
+
         ButterKnife.bind(this);
 
         TaskItemClickListener taskItemClickListener = (Task task, int position) -> {
@@ -56,8 +62,13 @@ public class ListActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.add:
-                Intent intent = new Intent(this, SpeechActivity.class);
-                startActivityForResult(intent, 2);
+                //Intent intent = new Intent(this, SpeechActivity.class);
+                //startActivityForResult(intent, 2);
+                int numInvokes = sharedPref.getInt("NUM_INVOKES",0);
+                numInvokes++;
+                sharedPref.edit().putInt("NUM_INVOKES",numInvokes).apply();
+                Toast.makeText(this,  "Invoked " + numInvokes + " times", Toast.LENGTH_LONG).show();
+
                 return true;
 
             case R.id.settings:
