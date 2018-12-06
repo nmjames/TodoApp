@@ -73,26 +73,26 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
 
     public void addItem(Task task){
         tasks.add(task);
-        dataSetChanged();
-    }
-
-    public void setItem(int position, Task task){
-        if(position < tasks.size()){
-            tasks.set(position, task);
-            dataSetChanged();
-        }
-    }
-
-    private void deleteItem(int position){
-        tasks.remove(position);
-        dataSetChanged();
-    }
-
-    private void dataSetChanged(){
-        taskRepository.saveTasks(tasks);
+        taskRepository.addTask(task);
         notifyDataSetChanged();
     }
 
+    public void setItem(int position, Task task){
+
+        taskRepository.removeTask(tasks.get(position));
+        taskRepository.addTask(task);
+
+        tasks.remove(position);
+        tasks.add(position, task);
+
+        notifyDataSetChanged();
+    }
+
+    private void deleteItem(int position){
+        taskRepository.removeTask(tasks.get(position));
+        tasks.remove(position);
+        notifyDataSetChanged();
+    }
 
 
     public Object getItem(int position) {

@@ -1,34 +1,55 @@
 package com.sepura.jamesn.todoapp;
 
+import android.arch.persistence.room.Room;
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
-
+import java.util.ArrayList;
 import java.util.List;
 
 public class TaskRepository {
-    Gson gson;
-    SharedPreferences sharedPref;
+
+    private TasksDao tasksDao;
+
 
     public TaskRepository(Context context) {
-        gson = new GsonBuilder().create();
-        sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-    }
 
-
-    public void saveTasks(List<Task> taskList){
-        String serialized = gson.toJson(taskList);
-        sharedPref.edit().putString("TASK_LIST",serialized).apply();
+        tasksDao = Room.databaseBuilder(context, AppDatabase.class, "tasksDao-name")
+                .allowMainThreadQueries()
+                .build()
+                .tasksDao();
     }
 
     public List<Task> readTasks(){
-        String serialized = sharedPref.getString("TASK_LIST","");
-        List<Task> taskList = gson.fromJson(serialized, new TypeToken<List<Task>>() {}.getType());
-        return taskList;
+        List<TaskEntry> taskEntryList = tasksDao.getAll();
+        List<Task> tasks = new ArrayList<>();
+
+        for (TaskEntry entry: taskEntryList) {
+            tasks.add(toTask(entry));
+        }
+        return tasks;
+    }
+
+
+    public void addTask(Task task){
+        TaskEntry taskEntry = toTaskEntry(task);
+        tasksDao.insertAll(taskEntry);
+    }
+
+    public void removeTask(Task task){
+        tasksDao.deleteByNameAndPriority(task.getName(), task.getPriority());
+    }
+
+    private static Task toTask(TaskEntry taskEntry){
+        Task task = new Task(taskEntry.getName(), taskEntry.getPriority());
+        return task;
+    }
+
+    private static TaskEntry toTaskEntry(Task task){
+        TaskEntry taskEntry = new TaskEntry();
+
+        taskEntry.setName(task.getName());
+        taskEntry.setPriority(task.getPriority());
+
+        return  taskEntry;
     }
 
 }
