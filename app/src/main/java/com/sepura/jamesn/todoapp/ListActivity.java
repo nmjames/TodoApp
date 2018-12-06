@@ -30,24 +30,19 @@ public class ListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
         ButterKnife.bind(this);
-        listAdapter = new ListAdapter();
+
+        TaskItemClickListener taskItemClickListener = (Task task, int position) -> {
+            Intent intent = new Intent(this, TaskActivity.class);
+            intent.putExtra(TaskActivity.POSITION_REF, position);
+            intent.putExtra(TaskActivity.TASK_REF, task);
+            startActivityForResult(intent, EDIT_TASK_CODE);
+        };
+
+        listAdapter = new ListAdapter(taskItemClickListener);
 
         listView.setAdapter(listAdapter);
         listView.setLayoutManager(new LinearLayoutManager(this));
 
-    //    listView.setOnItemClickListener((parent, view, position,id) -> {
-
-      //      Task task = (Task)listAdapter.getItem(position);
-
-        //    Intent intent = new Intent(this, TaskActivity.class);
-
-          //  intent.putExtra(TaskActivity.POSITION_REF, position);
-            //intent.putExtra(TaskActivity.TASK_REF, task);
-            //startActivityForResult(intent, EDIT_TASK_CODE);
-
-
-            //Toast.makeText(this, "clicked item" + position + "id" +id, Toast.LENGTH_LONG).show();
-        //});
     }
 
     @Override

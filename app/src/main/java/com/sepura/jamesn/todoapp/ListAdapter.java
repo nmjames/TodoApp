@@ -20,10 +20,18 @@ import butterknife.ButterKnife;
 public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
 
     private List<Task> tasks = new ArrayList<>();
+    private TaskItemClickListener taskItemClickListener;
 
-    ListAdapter() {
-        tasks.add(new Task( "Buy beer",Task.TASK_PRIORITY_NORMAL));
+    public ListAdapter(TaskItemClickListener taskItemClickListener){
+
+        this.taskItemClickListener = taskItemClickListener;
+
+        tasks.add(new Task( "Buy beer",Task.TASK_PRIORITY_HIGH));
+        tasks.add(new Task( "Buy snacks",Task.TASK_PRIORITY_NORMAL));
+        tasks.add(new Task( "Start Netflix",Task.TASK_PRIORITY_LOW));
+
     }
+
 
     @NonNull
     @Override
@@ -51,6 +59,11 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
         });
 
         viewHolder.itemView.setBackgroundResource(getPriorityColor(priority));
+
+        viewHolder.itemView.setOnClickListener((v)->{
+            taskItemClickListener.onTaskClicked(task,position );
+
+        });
     }
 
     public void addItem(Task task){
